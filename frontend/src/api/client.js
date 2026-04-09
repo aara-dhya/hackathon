@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080";
+const API_URL = "http://192.168.1.55:8080"
 
 export async function getDashboard() {
   const res = await fetch(`${API_URL}/dashboard`);
