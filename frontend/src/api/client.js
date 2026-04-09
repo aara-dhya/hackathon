@@ -26,3 +26,8 @@ export async function useMaterial(data) {
   });
   return res.json();
 }
+
+export async function getInvoice(phase) {
+  const res = await fetch(`${API_URL}/invoice/${phase}`);
+  return res.json();
+}

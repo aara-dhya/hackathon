@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getDashboard, addMaterial, useMaterial } from "./api/client";
+import { getDashboard, addMaterial, useMaterial, getInvoice } from "./api/client";
 
 function App() {
   const [data, setData] = useState(null);
@@ -49,8 +49,7 @@ function App() {
   };
 
   const fetchInvoice = async () => {
-    const res = await fetch(`http://localhost:8080/invoice/${phaseQuery}`);
-    const data = await res.json();
+    const data = await getInvoice(phaseQuery);
     setInvoice(data);
   };
 
