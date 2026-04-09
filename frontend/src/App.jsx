@@ -62,8 +62,8 @@ function App() {
     setInvoice(data);
   };
 
-  if (!data || !data.inventory) return <p>Loading...</p>;
-
+  if (!data) return <p>Loading...</p>;
+  
   return (
     <div style={pageStyle}>
       <div style={containerStyle}>
