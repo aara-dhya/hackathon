@@ -19,8 +19,13 @@ function App() {
   });
 
   const loadDashboard = async () => {
-    const res = await getDashboard();
-    setData(res);
+    try {
+      const res = await getDashboard();
+      console.log("DASHBOARD:", res);
+      setData(res);
+    } catch (err) {
+      console.error("Dashboard error:", err);
+    }
   };
 
   useEffect(() => {
@@ -29,11 +34,7 @@ function App() {
 
   // ✅ Add Material
   const handleAddMaterial = async () => {
-    if (
-      !material.name.trim() ||
-      !material.quantity ||
-      !material.cost_per_unit
-    ) {
+    if (!material.name.trim() || !material.quantity || !material.cost_per_unit) {
       alert("Fill all fields");
       return;
     }
@@ -50,11 +51,7 @@ function App() {
 
   // ✅ Use Material
   const handleUseMaterial = async () => {
-    if (
-      !usage.material_name.trim() ||
-      !usage.quantity ||
-      !usage.phase.trim()
-    ) {
+    if (!usage.material_name.trim() || !usage.quantity || !usage.phase.trim()) {
       alert("Fill all fields");
       return;
     }
@@ -69,29 +66,40 @@ function App() {
     loadDashboard();
   };
 
-  // ✅ Fetch Invoice
+  // ✅ Invoice
   const fetchInvoice = async () => {
     if (!phaseQuery.trim()) {
       alert("Enter phase");
       return;
     }
 
-    const res = await getInvoice(phaseQuery);
-    setInvoice(res);
+    try {
+      const res = await getInvoice(phaseQuery);
+      console.log("INVOICE:", res);
+      setInvoice(res);
+    } catch (err) {
+      console.error("Invoice error:", err);
+    }
   };
 
-  // ✅ Loading state ONLY here
-  if (!data) return <p style={{ padding: "20px" }}>Loading...</p>;
+  // ✅ ONLY loading check
+  if (!data) {
+    return <p style={{ padding: "20px" }}>Loading...</p>;
+  }
+
+  // ✅ SAFE defaults (THIS PREVENTS CRASHES)
+  const inventory = data.inventory || [];
+  const phaseCost = data.phase_cost || {};
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial", background: "#f5f7fb", minHeight: "100vh" }}>
       
       <h1>Construction Dashboard</h1>
-      <p>Total Spent: <strong>{data.total_spent}</strong></p>
+      <p>Total Spent: <strong>{data.total_spent || 0}</strong></p>
 
       <div style={{ display: "flex", gap: "30px", marginTop: "20px" }}>
 
-        {/* LEFT PANEL */}
+        {/* LEFT */}
         <div style={{ width: "300px" }}>
 
           <div style={card}>
@@ -155,7 +163,7 @@ function App() {
 
         </div>
 
-        {/* RIGHT PANEL */}
+        {/* RIGHT */}
         <div style={{ flex: 1 }}>
 
           <div style={card}>
@@ -170,14 +178,14 @@ function App() {
               </thead>
 
               <tbody>
-                {data.inventory.length === 0 ? (
+                {inventory.length === 0 ? (
                   <tr>
                     <td colSpan="2" style={{ textAlign: "center", padding: "10px" }}>
                       No materials yet
                     </td>
                   </tr>
                 ) : (
-                  data.inventory.map((item, i) => (
+                  inventory.map((item, i) => (
                     <tr key={i}>
                       <td style={td}>{item.material}</td>
                       <td style={td}>{item.quantity}</td>
@@ -191,11 +199,11 @@ function App() {
           <div style={card}>
             <h3>Phase Cost</h3>
 
-            {Object.keys(data.phase_cost).length === 0 ? (
+            {Object.keys(phaseCost).length === 0 ? (
               <p>No usage yet</p>
             ) : (
               <ul>
-                {Object.entries(data.phase_cost).map(([phase, cost]) => (
+                {Object.entries(phaseCost).map(([phase, cost]) => (
                   <li key={phase}>
                     {phase}: ₹{cost}
                   </li>
@@ -220,7 +228,7 @@ function App() {
               <div style={{ marginTop: "15px" }}>
                 <h4>Invoice: {invoice.phase}</h4>
 
-                {invoice.items.length === 0 ? (
+                {!invoice.items || invoice.items.length === 0 ? (
                   <p>No data</p>
                 ) : (
                   <ul>
@@ -232,7 +240,7 @@ function App() {
                   </ul>
                 )}
 
-                <strong>Total: ₹{invoice.total}</strong>
+                <strong>Total: ₹{invoice.total || 0}</strong>
               </div>
             )}
           </div>
