@@ -63,7 +63,7 @@ function App() {
   };
 
   if (!data) return <p>Loading...</p>;
-  
+
   return (
     <div style={pageStyle}>
       <div style={containerStyle}>
@@ -126,20 +126,12 @@ function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.inventory && data.inventory.length > 0 ? (
-                      data.inventory.map((item, i) => (
-                        <tr key={i}>
-                          <td style={tdStyle}>{item.material}</td>
-                          <td style={tdStyle}>{item.quantity}</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
-                        <td colSpan="2" style={{ textAlign: "center", padding: "10px" }}>
-                          No materials yet
-                        </td>
+                    {data.inventory.map((item, i) => (
+                      <tr key={i}>
+                        <td style={tdStyle}>{item.material}</td>
+                        <td style={tdStyle}>{item.quantity}</td>
                       </tr>
-                    )}
+                    ))}
                   </tbody>
                 </table>
               )}
