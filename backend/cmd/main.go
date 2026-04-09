@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"hackathon/config"
 
@@ -218,6 +219,10 @@ func main() {
 		})
 	})
 
-	log.Println("Server running on :8080")
-	r.Run(":8080")
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // fallback for local dev
+	}
+	log.Println("Server running on port", port)
+	r.Run(":" + port)
 }

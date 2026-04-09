@@ -3,6 +3,7 @@ package config
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 )
@@ -10,17 +11,21 @@ import (
 var DB *sql.DB
 
 func ConnectDB() {
-	connStr := "user=postgres password=postgres dbname=construction sslmode=disable"
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		log.Fatal("DATABASE_URL not set")
+	}
 
-	db, err := sql.Open("postgres", connStr)
+	var err error
+	DB, err = sql.Open("postgres", dbURL)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("DB connection failed:", err)
 	}
 
-	if err = db.Ping(); err != nil {
-		log.Fatal(err)
+	err = DB.Ping()
+	if err != nil {
+		log.Fatal("DB ping failed:", err)
 	}
 
-	DB = db
-	log.Println("Connected to database")
+	log.Println("Connected to DB")
 }
