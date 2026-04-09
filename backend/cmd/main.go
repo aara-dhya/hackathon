@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"hackathon/config"
 
@@ -46,6 +47,11 @@ func main() {
 		var input Material
 
 		if err := c.ShouldBindJSON(&input); err != nil {
+			c.JSON(400, gin.H{"error": "invalid input"})
+			return
+		}
+
+		if strings.TrimSpace(input.Name) == "" || input.Quantity <= 0 || input.CostPerUnit <= 0 {
 			c.JSON(400, gin.H{"error": "invalid input"})
 			return
 		}

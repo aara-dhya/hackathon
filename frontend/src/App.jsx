@@ -27,6 +27,15 @@ function App() {
   }, []);
 
   const handleAddMaterial = async () => {
+    if (
+      !material.name.trim() ||
+      !material.quantity ||
+      !material.cost_per_unit
+    ) {
+      alert("Please fill all fields");
+      return;
+    }
+
     await addMaterial({
       name: material.name,
       quantity: Number(material.quantity),
