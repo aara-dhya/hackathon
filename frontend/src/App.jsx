@@ -62,7 +62,7 @@ function App() {
     setInvoice(data);
   };
 
-  if (!data) return <p style={{ padding: "20px" }}>Loading...</p>;
+  if (!data || !data.inventory) return <p>Loading...</p>;
 
   return (
     <div style={pageStyle}>
@@ -126,17 +126,20 @@ function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {data.inventory.map((item, i) => (
-                      <tr key={i}>
-                        <td style={tdStyle}>{item.material}</td>
-                        <td style={{
-                          ...tdStyle,
-                          color: item.quantity < 50 ? "#dc2626" : "#111"
-                        }}>
-                          {item.quantity}
+                    {data.inventory && data.inventory.length > 0 ? (
+                      data.inventory.map((item, i) => (
+                        <tr key={i}>
+                          <td style={tdStyle}>{item.material}</td>
+                          <td style={tdStyle}>{item.quantity}</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan="2" style={{ textAlign: "center", padding: "10px" }}>
+                          No materials yet
                         </td>
                       </tr>
-                    ))}
+                    )}
                   </tbody>
                 </table>
               )}
