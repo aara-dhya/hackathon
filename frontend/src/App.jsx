@@ -105,17 +105,12 @@ function App() {
           <div style={card}>
             <h3>Add Material</h3>
 
-            <select
+            <input
               style={input}
+              placeholder="Material name"
               value={material.name}
               onChange={(e) => setMaterial({ ...material, name: e.target.value })}
-            >
-              <option value="">Select Material</option>
-              <option value="cement">Cement</option>
-              <option value="steel">Steel</option>
-              <option value="sand">Sand</option>
-              <option value="bricks">Bricks</option>
-            </select>
+            />
 
             <input
               style={input}
@@ -137,12 +132,19 @@ function App() {
           <div style={card}>
             <h3>Use Material</h3>
 
-            <input
+            <select
               style={input}
-              placeholder="Material name"
               value={usage.material_name}
               onChange={(e) => setUsage({ ...usage, material_name: e.target.value })}
-            />
+            >
+              <option value="">Select Material</option>
+
+              {inventory.map((item, i) => (
+                <option key={i} value={item.material}>
+                  {item.material}
+                </option>
+              ))}
+            </select>
 
             <input
               style={input}
@@ -158,7 +160,13 @@ function App() {
               onChange={(e) => setUsage({ ...usage, phase: e.target.value })}
             />
 
-            <button style={button} onClick={handleUseMaterial}>Use</button>
+            <button
+              style={button}
+              disabled={!usage.material_name}
+              onClick={handleUseMaterial}
+            >
+              Use
+            </button>
           </div>
 
         </div>
